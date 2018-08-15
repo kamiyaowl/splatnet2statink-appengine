@@ -21,6 +21,7 @@ from subprocess import call
 # PIL/Pillow imported at bottom
 
 import os
+import time
 from flask import Flask, jsonify, make_response
 app = Flask(__name__)
 
@@ -258,7 +259,7 @@ def populate_battles(s_flag, t_flag, r_flag, debug):
 	results = load_results()
 
 	battles = [] # 50 recent battles on splatnet
-
+	
 	# if r_flag, check if there are any battles in splatnet that aren't on stat.ink
 	if r_flag:
 		print("Checking if there are previously-unuploaded battles...")
@@ -1140,9 +1141,10 @@ def blackout(image_result_content, players):
 
 @app.route('/sync')
 def sync():
-	result = populate_battles(True, True, True, debug)
+	start =  time.time()
+	populate_battles(True, True, True, debug)
 	return make_response(jsonify({
-		"battle_count": len(result)
+		"elapsed": time.time() - start
 	}))
 
 @app.route('/')
