@@ -1,0 +1,4 @@
+cron:
+  - description: "battle auto-sync ..."
+    url: "/sync"
+    schedule: every 3 hours

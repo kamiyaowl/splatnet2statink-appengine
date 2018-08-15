@@ -21,7 +21,7 @@ from subprocess import call
 # PIL/Pillow imported at bottom
 
 import os
-from flask import Flask
+from flask import Flask, jsonify, make_response
 app = Flask(__name__)
 
 A_VERSION = "1.1.6"
@@ -1140,11 +1140,16 @@ def blackout(image_result_content, players):
 
 @app.route('/')
 def pong():
-	return 'ok'
+	return make_response(jsonify({
+		status: 'ok' 
+	})
 
 @app.route('/sync')
 def sync():
-	populate_battles(True, True, True, debug)
+	result = populate_battles(True, True, True, debug)
+	return make_response(jsonify({
+		result: result 
+	})
 
 @app.errorhandler(500)
 def server_error(e):
