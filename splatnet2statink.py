@@ -1153,11 +1153,7 @@ def pong():
 
 
 @app.errorhandler(500)
-def server_error(e):
-    err = """
-    An internal error occurred: <pre>{}</pre>
-    See logs for full stacktrace.
-    """.format(e)
+def server_error(err):
 	print(err)
 	return err, 500
 
