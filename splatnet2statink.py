@@ -703,7 +703,7 @@ def post_battle(i, results, s_flag, t_flag, m_flag, sendgears, debug, ismonitor=
 	#############
 	## PAYLOAD ##
 	#############
-	payload = {'agent': 'splatnet2statink-gcr', 'agent_version': A_VERSION, 'automated': 'yes'}
+	payload = {'agent': 'splatnet2statink-gae', 'agent_version': A_VERSION, 'automated': 'yes'}
 	agent_variables = {'upload_mode': "Monitoring" if ismonitor else "Manual"}
 	payload["agent_variables"] = agent_variables
 	bn = results[i]["battle_number"]
@@ -1093,9 +1093,9 @@ def post_battle(i, results, s_flag, t_flag, m_flag, sendgears, debug, ismonitor=
 		url  = 'https://stat.ink/api/v2/battle'
 		auth = {'Authorization': 'Bearer {}'.format(API_KEY), 'Content-Type': 'application/x-msgpack'}
 
-		if payload["agent"] != os.path.basename(__file__)[:-3]:
-			print("Could not upload. Please contact @frozenpandaman on Twitter/GitHub for assistance.")
-			exit(1)
+		# if payload["agent"] != os.path.basename(__file__)[:-3]:
+		# 	print("Could not upload. Please contact @frozenpandaman on Twitter/GitHub for assistance.")
+		# 	exit(1)
 		postbattle = requests.post(url, headers=auth, data=msgpack.packb(payload), allow_redirects=False)
 
 		# Response
