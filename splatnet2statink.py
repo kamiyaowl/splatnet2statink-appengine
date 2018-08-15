@@ -1172,4 +1172,5 @@ def server_error(err):
 	return err, 500
 
 if __name__ == "__main__":
+	from PIL import Image, ImageDraw
 	app.run(host="0.0.0.0", port=8080, debug=debug)
