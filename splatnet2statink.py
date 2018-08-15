@@ -47,7 +47,7 @@ except:
 USER_LANG     = config_data["user_lang"] # only works with your game region's supported languages
 #########################
 
-debug = True # print out payload and exit. can use with geargrabber2.py & saving battle jsons
+debug = False # print out payload and exit. can use with geargrabber2.py & saving battle jsons
 filename = None # 所々で、何故か引数無しで参照されていてエラーになる
 
 if debug:
