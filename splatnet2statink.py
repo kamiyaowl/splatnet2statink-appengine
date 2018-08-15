@@ -1144,13 +1144,15 @@ def sync():
 	start =  time.time()
 	populate_battles(True, True, True, debug)
 	return make_response(jsonify({
-		"elapsed": time.time() - start
+		"elapsed": time.time() - start,
+		"version": A_VERSION,
 	}))
 
 @app.route('/')
 def pong():
 	return make_response(jsonify({
-		"status": 'ok' 
+		"status": 'OK',
+		"version": A_VERSION, 
 	}))
 
 @app.errorhandler(500)
