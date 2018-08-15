@@ -36,7 +36,6 @@ config_data = {
 	"user_lang"    : os.getenv("user_lang"    , ""),
 	"session_token": os.getenv("session_token", ""),
 }
-
 #########################
 ## API KEYS AND TOKENS ##
 API_KEY       = config_data["api_key"] # for stat.ink
@@ -48,7 +47,12 @@ except:
 USER_LANG     = config_data["user_lang"] # only works with your game region's supported languages
 #########################
 
-debug = False # print out payload and exit. can use with geargrabber2.py & saving battle jsons
+debug = True # print out payload and exit. can use with geargrabber2.py & saving battle jsons
+
+if debug:
+	print("#debug config_data")
+	print(config_data)
+
 
 app_head = {
 	'Host': 'app.splatoon2.nintendo.net',
@@ -257,6 +261,9 @@ def populate_battles(s_flag, t_flag, r_flag, debug):
 	'''Populates the battles list with SplatNet battles. Optionally uploads unuploaded battles.'''
 
 	results = load_results()
+	if debug:
+		print("#debug results")
+		print(results)
 
 	battles = [] # 50 recent battles on splatnet
 	
@@ -268,6 +275,9 @@ def populate_battles(s_flag, t_flag, r_flag, debug):
 		auth = {'Authorization': 'Bearer {}'.format(API_KEY)}
 		resp = requests.get(url, headers=auth)
 		statink_battles = json.loads(resp.text) # 100 recent battles on stat.ink. should avoid dupes
+		if debug:
+			print("#debug statink_battles")
+			print(statink_battles)
 
 	# always does this to populate battles array, regardless of r_flag
 	for result in reversed(results):
@@ -1161,4 +1171,4 @@ def server_error(err):
 	return err, 500
 
 if __name__ == "__main__":
-	app.run(host="0.0.0.0", port=8080, debug=True)
+	app.run(host="0.0.0.0", port=8080, debug=debug)
