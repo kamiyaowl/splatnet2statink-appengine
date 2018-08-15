@@ -99,3 +99,14 @@ In this case, users must obtain their cookie from their phone by intercepting th
 ## License
 
 [GPLv3](https://www.gnu.org/licenses/gpl-3.0.html)
+
+
+## secret.yaml
+
+```yaml
+env_variables:
+  api_key: "my_api_key_here"
+  cookie: "my_cookie_here"
+  user_lang: "en-US"
+  session_token: "my_session_token_here"
+```

@@ -1158,7 +1158,6 @@ def server_error(e):
     An internal error occurred: <pre>{}</pre>
     See logs for full stacktrace.
     """.format(e)
-
 	print(err)
 	return err, 500
 
