@@ -1138,18 +1138,19 @@ def blackout(image_result_content, players):
 		pass
 	return scoreboard
 
-@app.route('/')
-def pong():
-	return make_response(jsonify({
-		status: 'ok' 
-	}))
-
 @app.route('/sync')
 def sync():
 	result = populate_battles(True, True, True, debug)
 	return make_response(jsonify({
-		battle_count: len(result)
+		"battle_count": len(result)
 	}))
+
+@app.route('/')
+def pong():
+	return make_response(jsonify({
+		"status": 'ok' 
+	}))
+
 
 @app.errorhandler(500)
 def server_error(e):
