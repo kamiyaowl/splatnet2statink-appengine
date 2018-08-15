@@ -1,0 +1,26 @@
+runtime: python
+env: flex
+entrypoint: gunicorn -b :$PORT splatnet2statink:app
+
+runtime_config:
+  python_version: 3
+
+manual_scaling:
+  instances: 1
+resources:
+  cpu: 1
+  memory_gb: 0.5
+  disk_size_gb: 10
+
+liveness_check:
+  path: "/"
+  check_interval_sec: 300
+  timeout_sec: 30
+  failure_threshold: 5
+  success_threshold: 2
+
+env_variables:
+  api_key: "my_api_key_here"
+  cookie: "my_cookie_here"
+  user_lang: "en-US"
+  session_token: "my_session_token_here"
