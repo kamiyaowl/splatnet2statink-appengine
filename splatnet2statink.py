@@ -20,24 +20,21 @@ from distutils.version import StrictVersion
 from subprocess import call
 # PIL/Pillow imported at bottom
 
+import os
+from flask import Flask
+app = Flask(__name__)
+
 A_VERSION = "1.1.6"
 
 print("splatnet2statink v{}".format(A_VERSION))
 
-try:
-	config_file = open("config.txt", "r")
-	config_data = json.load(config_file)
-	config_file.close()
-except (IOError, ValueError):
-	print("Generating new config file.")
-	config_data = {"api_key": "", "cookie": "", "user_lang": "", "session_token": ""}
-	config_file = open("config.txt", "w")
-	config_file.seek(0)
-	config_file.write(json.dumps(config_data, indent=4, sort_keys=True, separators=(',', ': ')))
-	config_file.close()
-	config_file = open("config.txt", "r")
-	config_data = json.load(config_file)
-	config_file.close()
+# config.txt -> env
+config_data = {
+	"api_key"      : os.getenv("api_key"      , ""),
+	"cookie"       : os.getenv("cookie"       , ""),
+	"user_lang"    : os.getenv("user_lang"    , ""),
+	"session_token": os.getenv("session_token", ""),
+}
 
 #########################
 ## API KEYS AND TOKENS ##
@@ -126,13 +123,7 @@ def gen_new_cookie(reason):
 def write_config(tokens):
 	'''Writes config file and updates the global variables.'''
 
-	config_file = open("config.txt", "w")
-	config_file.seek(0)
-	config_file.write(json.dumps(tokens, indent=4, sort_keys=True, separators=(',', ': ')))
-	config_file.close()
-
-	config_file = open("config.txt", "r")
-	config_data = json.load(config_file)
+	print("skip write_config()")
 
 	global API_KEY
 	API_KEY = config_data["api_key"]
@@ -143,7 +134,6 @@ def write_config(tokens):
 	global USER_LANG
 	USER_LANG = config_data["user_lang"]
 
-	config_file.close()
 
 def load_json(bool):
 	'''Returns results JSON from online.'''
@@ -193,37 +183,7 @@ def set_language():
 
 def check_for_updates():
 	'''Checks the version of the script against the latest version in the repo and updates dbs.py.'''
-
-	latest_script = requests.get("https://raw.githubusercontent.com/frozenpandaman/splatnet2statink/master/splatnet2statink.py")
-	new_version = re.search("= \"([\d.]*)\"", latest_script.text).group(1)
-	try:
-		update_available = StrictVersion(new_version) != StrictVersion(A_VERSION)
-		if update_available:
-			print("There is a new version available.")
-			if os.path.isdir(".git"): # git user
-				update_now = input("Would you like to update now? [Y/n] ")
-				if update_now == "" or update_now[0].lower() == "y":
-					FNULL = open(os.devnull, "w")
-					call(["git", "checkout", "."], stdout=FNULL, stderr=FNULL)
-					call(["git", "checkout", "master"], stdout=FNULL, stderr=FNULL)
-					call(["git", "pull"], stdout=FNULL, stderr=FNULL)
-					print("Successfully updated to v{}. Please restart splatnet2statink.".format(new_version))
-					return True
-				else:
-					print("Remember to update later with \"git pull\" to get the latest database.")
-			else: # non-git user
-				print("Visit the site below to update:\nhttps://github.com/frozenpandaman/splatnet2statink\n")
-				# dbs_freshness = time.time() - os.path.getmtime("dbs.py")
-				latest_db = requests.get("https://raw.githubusercontent.com/frozenpandaman/splatnet2statink/master/dbs.py")
-				try:
-					if latest_db.status_code == 200: # require proper response from github
-						local_db = open("dbs.py", "w")
-						local_db.write(latest_db.text)
-						local_db.close()
-				except: # if we can't open the file
-					pass # then we don't modify the database
-	except: # if there's a problem connecting to github
-		pass # then we assume there's no update available
+	print("skip check_for_updates()")
 
 def main():
 	'''I/O and setup.'''
@@ -1178,17 +1138,8 @@ def blackout(image_result_content, players):
 		pass
 	return scoreboard
 
+def sync():
+	populate_battles(True, True, True, debug)
+
 if __name__ == "__main__":
-	m_value, is_s, is_t, is_r, filename = main()
-	if is_s:
-		from PIL import Image, ImageDraw
-	if m_value != -1: # m flag exists
-		monitor_battles(is_s, is_t, is_r, m_value, debug)
-	elif is_r: # r flag exists without m, so run only the recent battle upload
-		populate_battles(is_s, is_t, is_r, debug)
-	else:
-		n, results = get_num_battles()
-		for i in reversed(range(n)):
-			post_battle(i, results, is_s, is_t, m_value, True if i == 0 else False, debug)
-		if debug:
-			print("")
+	app.run(host="0,0,0,0", port=8080, debug=True)
