@@ -1153,7 +1153,7 @@ def blackout(image_result_content, players):
 @app.route('/sync')
 def sync():
 	start =  time.time()
-	populate_battles(True, True, True, debug)
+	populate_battles(s_flag=False, t_flag=False, r_flag=True, debug=debug)
 	return make_response(jsonify({
 		"elapsed": time.time() - start,
 		"version": A_VERSION,
