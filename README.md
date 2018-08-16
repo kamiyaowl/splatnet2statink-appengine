@@ -1,4 +1,4 @@
-splatnet2statink-gcr
+splatnet2statink-gae
 ================
 
 splatoonの戦績同期をGoogle App Engine上で行うことができます。
